@@ -15,7 +15,7 @@ class ImportBooksDto(BaseModel):
 
 
 @router.get("/")
-def read_users(page: int = 1, title: str = ""):
+def get_frappe_books(page: int = 1, title: str = ""):
     return frappeLibrary.get_books(page, title)
 
 

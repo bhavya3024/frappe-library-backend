@@ -3,54 +3,62 @@ from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from models.bookMemberDto import BookMembersDto
 from typing import List
-import services.book
-sys.path.append("../services/book.py")
+from utils.index import  ResponseExecption
+import services.bookMembers
+sys.path.append("../services/bookMembers.py")
 
-bookService = services.book
+bookService = services.bookMembers
 
 router = APIRouter()
 
 
-class BookStockDto(BaseModel):
-    stock_amount: int
-
-
-class BookIdStockDto(BaseModel):
-    id: int
-    stock_amount: int
-
-
-class BookIdStocksDto(BaseModel):
-    bookStocks: List[BookIdStockDto]
-
+@router.post("/")
+def add_book_member(body: BookMembersDto):
+  try:
+    book_member_response = bookService.create_book_member(body)
+    return JSONResponse({
+        "success": True,
+        "book_members": jsonable_encoder(book_member_response)
+    })
+  except ResponseExecption as e:
+    print(e)
+    return JSONResponse({
+        "status_code": e.status or 500,
+        "message": e.message  or "Internal Server Error"
+    })
 
 @router.get("/")
-def get_books(page: int = 1):
-    books = bookService.get_all_books(page)
-    return JSONResponse({
+def get_book_members(page=1, member_id:int = None):
+    try:
+      book_members = bookService.get_book_members(page, member_id)
+      return JSONResponse({
         "success": True,
-        "books": jsonable_encoder(books)
-    })
+        "book_members": jsonable_encoder(book_members),
+      })
+    except ResponseExecption as e:
+      print(e)
+      return JSONResponse({
+        "status_code": e.status or 500,
+        "message": e.message  or "Internal Server Error"
+      })
 
 
-@router.patch('/{id}/stock-amounts')
-def update_stocks(id: int, body: BookIdStockDto):
-    book = bookService.update_book(id, body.stock_amount)
-    return JSONResponse({
-        "success": True if book["status"] is 200 else False,
-        "message": book["message"],
-        "status_code": book["status"]
-    })
+@router.patch('/{id}/pay-dues')
+def pay_dues(id=1):
+   try:
+     bookService.pay_dues(id=id)
+     return JSONResponse({
+         "success": True,
+         "message": "Rent has been paid successfully"
+     })
+   except ResponseExecption as e:
+     print(e)
+     return JSONResponse({
+       "status_code": e.status or 500,
+       "message": e.message or "Internal Server Error"
+     })
 
-
-@router.patch('/stock-amounts/bulk')
-def update_bulk_stocks(body: BookIdStocksDto):
-    bookService.update_all_books(body.bookStocks)
-    return JSONResponse({
-        "success": True,
-        "message": "Book stock amounts has been updated successfully",
-        "status_code": 204
-    })
-
+   
 

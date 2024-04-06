@@ -28,11 +28,10 @@ def upgrade() -> None:
         sa.Column('rent_end_date', sa.DateTime(), nullable=False),
         sa.Column('price', sa.Float(), nullable=False), # price will be no of days book has been kept
         sa.Column('rent_paid', sa.Boolean(), nullable=False, server_default=sa.false()),
-        sa.Column('rent_paid_at', sa.DateTime(), nullable=False),
+        sa.Column('rent_paid_at', sa.DateTime(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=False,server_default=sa.func.now()),
         sa.Column('updated_at', sa.DateTime(), nullable=False,server_default=sa.func.now(), onupdate=sa.func.now()),        
         sa.PrimaryKeyConstraint('id'),
-        sa.UniqueConstraint('book_id', 'member_id'),
     )
     op.create_foreign_key('fk_books_id', 'book_members', 'books', ['book_id'], ['id'])
     op.create_foreign_key('fk_member_id', 'book_members', 'members', ['member_id'], ['id'])
