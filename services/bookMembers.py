@@ -1,23 +1,18 @@
-from psycopg2 import Date
-
 from models.bookMemberDto import BookMembersDto
 from models.members import MembersModel
 from models.bookMembers import BookMembersModel
 from models.books import BookModel
-from typing import List, Dict
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import text, and_
 from connections.db import engine
 from utils.index import ResponseExecption
 from datetime import datetime
 
-
 SessionMaker = sessionmaker(bind=engine)
 
 def check_dues(member_id:int, session: Session):
     query = text(f'SELECT SUM(price) from book_members WHERE member_id = {member_id}')
     dues = session.execute(query).scalar()
-    print(f'Dues are --->>> ${dues}')
     if dues is None:
         return
     if dues > 500:
@@ -41,7 +36,7 @@ def create_book_member(book_member: BookMembersDto):
     if difference.days < 1:
         raise ResponseExecption(status=400, message="You need to rent a book for atleast one day")
     if difference.days > 30:
-        raise ResponseExecption(status=400, message="You can maximum rent a box for 30 days")
+        raise ResponseExecption(status=400, message="You can maximum rent a book for 30 days")
     price = difference.days * 25 # taken simple formula for simplicity
     book_member_exists = session.query(BookMembersModel).filter_by(book_id=book_member.book_id, member_id=book_member.member_id).first()
     if book_member_exists and book_member_exists.rent_paid is False:
