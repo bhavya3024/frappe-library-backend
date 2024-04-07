@@ -1,5 +1,6 @@
 import sys
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 sys.path.append('./routes/frappeLibrary.py')
 sys.path.append('./routes/books.py')
 
@@ -15,6 +16,14 @@ bookMembersRoute = routes.bookMembers
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Replace "*" with your allowed origins
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "PATCH"],  # Add allowed HTTP methods
+    allow_headers=["*"],  # Replace "*" with your allowed headers
+)
 
 app.include_router(frappeLibraryRoute.router, prefix="/frappe-libraries")
 

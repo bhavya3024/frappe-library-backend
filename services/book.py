@@ -11,11 +11,18 @@ Session = sessionmaker(bind=engine)
 from sqlalchemy.sql import select
 
 
-def get_all_books(page: int = 1):
+def get_all_books(page: int = 1, limit: int = 10):
     session = Session()
-    books = session.query(BookModel).limit(10).offset((page - 1) * 10).all()
+    books = session.query(BookModel).limit(limit).offset((page - 1) * limit).all()
     session.close()
     return books
+
+
+def get_books_count():
+    session = Session()
+    booksCount = session.query(BookModel).count()
+    session.close()
+    return booksCount
 
 
 class BookIdStockDto(BaseModel):

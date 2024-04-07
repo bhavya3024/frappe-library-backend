@@ -22,11 +22,13 @@ class BookIdStocksDto(BaseModel):
 
 
 @router.get("/")
-def get_books(page: int = 1):
-    books = bookService.get_all_books(page)
+def get_books(page: int = 1, limit: int = 10):
+    books = bookService.get_all_books(page, limit)
+    booksCount = bookService.get_books_count()
     return JSONResponse({
         "success": True,
-        "books": jsonable_encoder(books)
+        "books": jsonable_encoder(books),
+        "booksCount": booksCount
     })
 
 
