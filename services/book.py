@@ -24,6 +24,13 @@ def get_books_count():
     session.close()
     return booksCount
 
+def get_book_detail(id:int):
+    session = Session()
+    book = session.query(BookModel).filter_by(id=id).first()
+    session.close()
+    return book
+
+
 
 class BookIdStockDto(BaseModel):
     id: int
@@ -58,3 +65,6 @@ def update_all_books(book_stocks: List[BookIdStockDto]):
             book.stock_amount += current_book_stock.stock_amount
     session.commit()
     session.close()
+
+
+

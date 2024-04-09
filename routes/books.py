@@ -32,6 +32,15 @@ def get_books(page: int = 1, limit: int = 10):
     })
 
 
+@router.get('/{id}')
+def get_book_details(id: int):
+    book = bookService.get_book_detail(id)
+    return JSONResponse({
+        "success": True,
+        "book": jsonable_encoder(book)
+    })
+
+
 @router.patch('/{id}/stock-amounts')
 def update_stocks(id: int, body: BookIdStockDto):
     book = bookService.update_book(id, body.stock_amount)
