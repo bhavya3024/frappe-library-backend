@@ -27,7 +27,7 @@ def create_book_member(book_member: BookMembersDto):
         raise ResponseExecption(status=404, message='Member not found')
     if db_book is None:
         session.close()
-        raise ResponseExecption(status=404, message='Member with this email already exists')
+        raise ResponseExecption(status=404, message='Book not found')
     if db_book.stock_amount < 1:
         session.close()
         raise ResponseExecption(status=400, message='This book is out of stock for now')
@@ -38,7 +38,7 @@ def create_book_member(book_member: BookMembersDto):
     if difference.days > 30:
         raise ResponseExecption(status=400, message="You can maximum rent a book for 30 days")
     price = difference.days * 25 # taken simple formula for simplicity
-    book_member_exists = session.query(BookMembersModel).filter_by(book_id=book_member.book_id, member_id=book_member.member_id).first()
+    book_member_exists = session.query(BookMembersModel).filter_by(rent_paid=False, book_id=book_member.book_id, member_id=book_member.member_id).first()
     if book_member_exists and book_member_exists.rent_paid is False:
         raise ResponseExecption(status=400, message="Member has to pay rent for the same book took before")
     db_book_member = BookMembersModel(
@@ -67,7 +67,6 @@ def get_book_members(page=1, member_id=None):
 def pay_dues(id=int):
     session = SessionMaker()
     db_member = session.query(BookMembersModel).filter_by(id=id).first()
-    session.close()
     if db_member is None:
         raise ResponseExecption(status=404, message="Book Member not Found")
     if db_member.rent_paid is True:
@@ -76,5 +75,6 @@ def pay_dues(id=int):
     db_member.rent_paid_at = datetime.now()
     session.commit()
     session.close()
+
 
 

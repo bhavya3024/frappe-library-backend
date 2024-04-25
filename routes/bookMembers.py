@@ -9,7 +9,7 @@ from utils.index import  ResponseExecption
 import services.bookMembers
 sys.path.append("../services/bookMembers.py")
 
-bookService = services.bookMembers
+bookMemberSrvice = services.bookMembers
 
 router = APIRouter()
 
@@ -17,7 +17,7 @@ router = APIRouter()
 @router.post("/")
 def add_book_member(body: BookMembersDto):
   try:
-    book_member_response = bookService.create_book_member(body)
+    book_member_response = bookMemberSrvice.create_book_member(body)
     return JSONResponse({
         "success": True,
         "book_members": jsonable_encoder(book_member_response)
@@ -32,7 +32,7 @@ def add_book_member(body: BookMembersDto):
 @router.get("/")
 def get_book_members(page=1, member_id:int = None):
     try:
-      book_members = bookService.get_book_members(page, member_id)
+      book_members = bookMemberSrvice.get_book_members(page, member_id)
       return JSONResponse({
         "success": True,
         "book_members": jsonable_encoder(book_members),
@@ -48,7 +48,7 @@ def get_book_members(page=1, member_id:int = None):
 @router.patch('/{id}/pay-dues')
 def pay_dues(id=1):
    try:
-     bookService.pay_dues(id=id)
+     bookMemberSrvice.pay_dues(id=id)
      return JSONResponse({
          "success": True,
          "message": "Rent has been paid successfully"

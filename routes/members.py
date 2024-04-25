@@ -34,10 +34,12 @@ def create_member(body: MembersDto):
 def get_members(page: int = 1):
     try:
         new_member_response = member_service.get_members(page=page)
+        members_count = member_service.get_members_count()
         return JSONResponse({
             "status_code": 200,
             "message": "Members has been fetched successfully",
-            "data": jsonable_encoder(new_member_response)
+            "data": jsonable_encoder(new_member_response),
+            "count": members_count
         })
     except ResponseExecption as e:
         print(e)
@@ -67,9 +69,11 @@ def update_member(id: int, body: MembersDto):
 def get_member_by_id(id: int):
     try:
        member_response = member_service.get_member_by_id(id=id)
+       pending_dues = member_service.get_member_pending_dues(id=id)
        return JSONResponse({
            "status_code": 200,
            "message": "Member has been fetched successfully",
+           "pending_dues": pending_dues,
            "data": jsonable_encoder(member_response)         
        })
     except ResponseExecption as e:
@@ -93,4 +97,22 @@ def delete_member(id: int):
             "status_code": e.status or 500,
             "message": e.message  or "Internal Server Error"
         })
-    
+
+
+@router.get('/{id}/books')
+def get_books_by_member_id(id: int, page: int = 1):
+    try:
+       db_books = member_service.get_books_by_member_id(id=id, page=page)
+       db_books_count = member_service.get_books_count(id=id)
+       return JSONResponse({
+           "status_code": 200,
+           "data": db_books,
+           "count": db_books_count,
+           "message": "Member has been deleted successfully",
+       })
+    except ResponseExecption as e:
+        print(e)
+        return JSONResponse({
+            "status_code": e.status or 500,
+            "message": e.message  or "Internal Server Error"
+        })
