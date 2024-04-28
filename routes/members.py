@@ -73,7 +73,7 @@ def get_member_by_id(id: int):
        return JSONResponse({
            "status_code": 200,
            "message": "Member has been fetched successfully",
-           "pending_dues": pending_dues,
+           "pending_dues": jsonable_encoder(pending_dues),
            "data": jsonable_encoder(member_response)         
        })
     except ResponseExecption as e:

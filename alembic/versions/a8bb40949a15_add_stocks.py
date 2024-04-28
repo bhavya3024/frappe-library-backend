@@ -19,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column('books', sa.Column('stock_amount', sa.Integer(), server_default=0))
+    op.add_column('books', sa.Column('stock_amount', sa.INTEGER(), server_default=sa.text('0')))
 
 
 

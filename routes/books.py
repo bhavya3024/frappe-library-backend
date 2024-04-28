@@ -74,10 +74,6 @@ def get_book_members(id=int, page=int, limit:int = 10, add_new_members:bool = Fa
         "bookMembersCount": jsonable_encoder(book_members_count)
        })
 
-    
-
-
-
 @router.patch('/stock-amounts/bulk')
 def update_bulk_stocks(body: BookIdStocksDto):
     bookService.update_all_books(body.bookStocks)

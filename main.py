@@ -25,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],  # Replace "*" with your allowed headers
 )
 
-app.include_router(frappeLibraryRoute.router, prefix="/frappe-libraries")
+app.include_router(frappeLibraryRoute.router, prefix="/frappe-books")
 
 app.include_router(booksRoute.router, prefix="/books")
 

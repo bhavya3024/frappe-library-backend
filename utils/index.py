@@ -27,3 +27,6 @@ def convert_query_result_to_json(results, rows):
        data_list = []
     json_data = json.dumps(data_list, default=convert_datetime_to_string, indent=4)
     return json_data
+
+
+
