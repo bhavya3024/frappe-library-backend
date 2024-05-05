@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Dict
 import services.frappeLibrary
+from utils.index import ResponseExecption
 sys.path.append("../services/frappeLibrary.py")
 
 frappeLibrary = services.frappeLibrary
@@ -30,7 +31,19 @@ def get_frappe_books(page: int = 1, title: str = ""):
 
 @router.post('/import-books')
 def import_books(body: ImportBooksDto):
-    return frappeLibrary.import_books(body.frappeBookIsbnNumbers)
+   try:
+      frappeLibrary.import_books(body.frappeBookIsbnNumbers)
+      return JSONResponse({
+          "success": True,
+          "status_code": 201,
+          "message": "Frappe book has been successfully imported"
+      })
+   except ResponseExecption as e:
+        print(e)
+        return JSONResponse({
+            "status_code": e.status or 500,
+            "message": e.message  or "Internal Server Error"
+        })      
 
 
 @router.get('/import-books/all')
