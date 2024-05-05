@@ -1,3 +1,4 @@
+from http.client import HTTPException
 import sys
 from fastapi import APIRouter, Response
 from fastapi.encoders import jsonable_encoder
@@ -40,10 +41,7 @@ def import_books(body: ImportBooksDto):
       })
    except ResponseExecption as e:
         print(e)
-        return JSONResponse({
-            "status_code": e.status or 500,
-            "message": e.message  or "Internal Server Error"
-        })      
+        raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")     
 
 
 @router.get('/import-books/all')

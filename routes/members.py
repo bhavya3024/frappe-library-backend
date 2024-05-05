@@ -1,3 +1,4 @@
+from http.client import HTTPException
 import sys
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
@@ -42,11 +43,8 @@ def get_members(page: int = 1):
             "count": members_count
         })
     except ResponseExecption as e:
-        print(e)
-        return JSONResponse({
-            "status_code": e.status or 500,
-            "message": e.message  or "Internal Server Error"
-        })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  
 
 
 @router.patch("/{id}")
@@ -59,11 +57,8 @@ def update_member(id: int, body: MembersDto):
             "data": jsonable_encoder(update_response)
         })
     except ResponseExecption as e:
-        print(e)
-        return JSONResponse({
-            "status_code": e.status or 500,
-            "message": e.message  or "Internal Server Error"
-        })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  
 
 @router.get('/{id}')
 def get_member_by_id(id: int):
@@ -77,11 +72,8 @@ def get_member_by_id(id: int):
            "data": jsonable_encoder(member_response)         
        })
     except ResponseExecption as e:
-        print(e)
-        return JSONResponse({
-            "status_code": e.status or 500,
-            "message": e.message  or "Internal Server Error"
-        })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")    
 
 @router.delete('/{id}')
 def delete_member(id: int):
@@ -92,11 +84,8 @@ def delete_member(id: int):
            "message": "Member has been deleted successfully",
        })
     except ResponseExecption as e:
-        print(e)
-        return JSONResponse({
-            "status_code": e.status or 500,
-            "message": e.message  or "Internal Server Error"
-        })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  
 
 
 @router.get('/{id}/books')
@@ -111,8 +100,5 @@ def get_books_by_member_id(id: int, page: int = 1):
            "message": "Member has been deleted successfully",
        })
     except ResponseExecption as e:
-        print(e)
-        return JSONResponse({
-            "status_code": e.status or 500,
-            "message": e.message  or "Internal Server Error"
-        })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  

@@ -1,8 +1,8 @@
+from http.client import HTTPException
 import sys
 from fastapi import APIRouter
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 from models.bookMemberDto import BookMembersDto
 from typing import List
 from utils.index import  ResponseExecption
@@ -23,11 +23,8 @@ def add_book_member(body: BookMembersDto):
         "book_members": jsonable_encoder(book_member_response)
     })
   except ResponseExecption as e:
-    print(e)
-    return JSONResponse({
-        "status_code": e.status or 500,
-        "message": e.message  or "Internal Server Error"
-    })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  
 
 @router.get("/")
 def get_book_members(page=1, member_id:int = None):
@@ -39,10 +36,7 @@ def get_book_members(page=1, member_id:int = None):
       })
     except ResponseExecption as e:
       print(e)
-      return JSONResponse({
-        "status_code": e.status or 500,
-        "message": e.message  or "Internal Server Error"
-      })
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")
 
 
 @router.patch('/{id}/pay-dues')
@@ -54,11 +48,8 @@ def pay_dues(id=1):
          "message": "Rent has been paid successfully"
      })
    except ResponseExecption as e:
-     print(e)
-     return JSONResponse({
-       "status_code": e.status or 500,
-       "message": e.message or "Internal Server Error"
-     })
+      print(e)
+      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")
 
    
 
