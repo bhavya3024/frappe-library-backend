@@ -49,7 +49,7 @@ def get_book_details(id: int):
 def update_stocks(id: int, body: BookStockDto):
     book = bookService.update_book(id, body.stock_amount)
     return JSONResponse({
-        "success": True if book["status"] is 200 else False,
+        "success": True if book["status"] == 200 else False,
         "message": book["message"],
         "status_code": book["status"]
     })
