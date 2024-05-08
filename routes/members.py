@@ -1,6 +1,5 @@
-from http.client import HTTPException
 import sys
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from models.membersDto import MembersDto

@@ -1,6 +1,5 @@
-from http.client import HTTPException
 import sys
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -27,6 +26,8 @@ def get_frappe_books(page: int = 1, title: str = ""):
         "status_code": 200,
         "frappe_books": jsonable_encoder(frappe_books)
     })
+
+
     
 
 

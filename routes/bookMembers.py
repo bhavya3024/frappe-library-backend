@@ -1,6 +1,5 @@
-from http.client import HTTPException
 import sys
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from models.bookMemberDto import BookMembersDto
@@ -24,7 +23,7 @@ def add_book_member(body: BookMembersDto):
     })
   except ResponseExecption as e:
       print(e)
-      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  
+      raise HTTPException(400, 'Damn you')  
 
 @router.get("/")
 def get_book_members(page=1, member_id:int = None):
