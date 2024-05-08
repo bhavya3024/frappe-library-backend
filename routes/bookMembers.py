@@ -23,7 +23,7 @@ def add_book_member(body: BookMembersDto):
     })
   except ResponseExecption as e:
       print(e)
-      raise HTTPException(400, 'Damn you')  
+      raise HTTPException(400, e.message or "Internal Server Error")  
 
 @router.get("/")
 def get_book_members(page=1, member_id:int = None):
