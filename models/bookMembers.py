@@ -16,4 +16,5 @@ class BookMembersModel(Base):
     price = Column(Integer,nullable=False, name='price')
     created_at = Column(DateTime, name='created_at', default=func.now())
     updated_at = Column(DateTime, name='updated_at', default=func.now(), onupdate=func.now())
+    is_returned = Column(Boolean, name='is_returned', default=False)
     

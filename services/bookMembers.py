@@ -77,4 +77,20 @@ def pay_dues(id=int):
     session.close()
 
 
+def return_book(id=int):
+    session = SessionMaker()
+    db_member = session.query(BookMembersModel).filter_by(id=id).first()
+    if db_member is None:
+        raise ResponseExecption(status=404, message="Book Member not Found")
+    if db_member.is_returned:
+        raise ResponseExecption(status=409, message="This Book is already returned")
+    db_member.is_returned = True
+    db_book = session.query(BookModel).filter_by(id=db_member.book_id).first()
+    if db_book is None:
+        raise ResponseExecption(status=404, message="Book Not Found")
+    db_book.stock_amount += 1
+    session.commit()
+    session.close()
+    
+
 
