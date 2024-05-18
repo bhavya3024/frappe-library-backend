@@ -17,28 +17,25 @@ def get_book_stats():
 
     return results_dict
     
-def get_total_members():
+
+def member_wise_rent_stats():
     session = SessionMaker()
-    query = text(f'SELECT COUNT(*) FROM members')
-
-    results = session.execute(query).fetchall()
-    session.close()
-    return {
-      "total_members":  results[0][0]
-    }
-
-
-def get_total_book_purchases_vs_rent_paid():
-    session = SessionMaker()
-    query = text(f'SELECT COUNT(*) FROM book_members WHERE rent_paid = false')
-    result_not_paid = session.execute(query).fetchall()
-    
-    query = text(f"SELECT COUNT(*) FROM book_members")
+    query = text(f'SELECT COUNT(*) as count, SUM(bm.price) as total_price,  m.id, m.first_name, m.last_name  from members m INNER JOIN book_members bm ON bm.member_id = m.id  WHERE bm.rent_paid = true GROUP BY m.id, m.first_name, m.last_name')
+    result_rent_paid = session.execute(query).fetchall()
+    results_rent_paid_dict = [
+        { "count": row.count, "price": row.total_price, "id": row.id, "name": f"{row.first_name} {row.last_name}"}
+        for row in result_rent_paid
+    ]
+    query = text(f'SELECT COUNT(*) as count, SUM(bm.price) as total_price,  m.id, m.first_name, m.last_name  from members m INNER JOIN book_members bm ON bm.member_id = m.id  GROUP BY m.id, m.first_name, m.last_name')
     result_total = session.execute(query).fetchall()
+    results_total_dict = [
+        { "count": row.count, "price": row.total_price, "id": row.id, "name": f"{row.first_name} {row.last_name}"}
+        for row in result_total
+    ]
     session.close()
-    return {
-        "total_book_purchases": result_not_paid[0][0],
-        "rent_paid": result_total[0][0]
+    return  {
+       "members_rent_paid_stats": results_rent_paid_dict,
+       "members_stats": results_total_dict,
     }
 
 

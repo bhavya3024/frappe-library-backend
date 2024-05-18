@@ -1,5 +1,4 @@
 import sys
-from typing import List
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
@@ -25,23 +24,11 @@ def get_book_stats():
       print(e)
       raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")  
 
-@router.get('/total-rent-paid')
-def get_total_rent_paid():
-   try:
-      stats = chartService.get_total_book_purchases_vs_rent_paid()
-      return JSONResponse({
-          "success": True,
-          "stats": jsonable_encoder(stats)
-      })
-   except ResponseExecption as e:
-      print(e)
-      raise HTTPException(status_code=e.status or 500 ,detail=e.message or "Internal Server Error")
    
-
-@router.get('/total-members')
+@router.get('/member-stats')
 def total_members():
    try:
-      stats = chartService.get_total_members()
+      stats = chartService.member_wise_rent_stats()
       return JSONResponse({
          "success": True,
          "stats": jsonable_encoder(stats)
